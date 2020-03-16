@@ -16,6 +16,7 @@ You'll find instructions for how to do so over here:
     
     **IMPORTANT** When asked which template you wish to deploy, select **Build your own template in the editor** and paste the template below.
 
+Once your VM has been deployed, it will install the F@H client and start folding. You can monitor its progress by running `ssh folding@<your VM's IP> tail -f /var/lib/fahclient/log.txt`.
 
 ### Parameters
 ##### Name (`default: covid19folding`)
