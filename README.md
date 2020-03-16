@@ -34,4 +34,4 @@ The Folding@Home team you wish to contribute towards. By default this is the Azu
 This should be your SSH public key and is used to allow you to SSH into your machine to check on its status at any time. You can get it by running `cat ~/.ssh/id_rsa.pub` on your machine, or using `ssh-keygen` to create a key-pair if you haven't already.
 
 ## Credits
-Thank you to @lupino3 and @nst for their contributions to building this template.
+Thank you to [@lupino3](https://github.com/lupino3) and [@nst](https://github.com/nst) for their contributions to building this template.
