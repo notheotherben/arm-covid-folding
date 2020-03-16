@@ -65,6 +65,7 @@
             "  - [ dpkg, -i, --force-depends, /tmp/fahclient.deb ]",
             "  - [ mkdir, -p, '/var/lib/fahclient' ]",
             "  - [ chown, -R, 'fahclient:folding', '/var/lib/fahclient' ]",
+            "  - [ systemctl, enable, FAHClient.service ]",
             "",
             "write_files:",
             "  - path: /etc/fahclient/config.xml",
