@@ -55,35 +55,45 @@
     "variables": {
         "adminUsername": "folding",
         "cloudinit-lines": [
-            "#cloud-config\n",
-            "package_upgrade: true\n",
-            "\n",
-            "runcmd:\n",
-            "  - [ wget, 'https://download.foldingathome.org/releases/public/release/fahclient/debian-stable-64bit/v7.5/fahclient_7.5.1_amd64.deb' , -O, '/tmp/fahclient.deb' ]\n",
-            "  - [ dpkg, -i, --force-depends, /tmp/fahclient.deb ]\n",
-            "\n",
-            "write_files:\n",
-            "  - path: /etc/fahclient/config.xml\n",
-            "    content: |\n",
-            "        <config>\n",
-            "          <!-- Client Control -->\n",
-            "          <fold-anon v='true' />\n",
-            "          \n",
-            "          <!-- Folding Slot Configuration -->\n",
-            "          <gpu v='true' />\n",
-            "          \n",
-            "          <!-- Slot Control -->\n",
-            "          <power v='full' />\n",
-            "          \n",
-            "          <!-- User Information -->\n",
-            "          <user v='Anonymous' />\n",
-            "[concat('          <team v=\"', parameters('fah_team'), '\" />\n')]",
-            "          \n",
-            "          <!-- Folding Slots -->\n",
-            "          <slot id='0' type='CPU' />\n",
-            "          <slot id='1' type='GPU' />\n",
-            "          \n",
-            "        </config>\n"
+            "#cloud-config",
+            "package_upgrade: true",
+            "",
+            "runcmd:",
+            "  - [ wget, 'http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.2.89-1_amd64.deb', -O, '/tmp/cuda.deb' ]",
+            "  - [ dpkg, -i, /tmp/cuda.deb ]",
+            "  - [apt-key, adv, --fetch-keys, 'http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub' ]",
+            "  - [ apt, update ]",
+            "  - [ apt, install, cuda ]",
+            "  - [ wget, 'https://download.foldingathome.org/releases/public/release/fahclient/debian-stable-64bit/v7.5/fahclient_7.5.1_amd64.deb' , -O, '/tmp/fahclient.deb' ]",
+            "  - [ dpkg, -i, --force-depends, /tmp/fahclient.deb ]",
+            "",
+            "write_files:",
+            "  - path: /etc/fahclient/config.xml",
+            "    content: |",
+            "        <config>",
+            "          <!-- Client Control -->",
+            "          <fold-anon v='true' />",
+            "          ",
+            "          <!-- Folding Slot Configuration -->",
+            "          <gpu v='true' />",
+            "          ",
+            "          <!-- Slot Control -->",
+            "          <power v='full' />",
+            "          ",
+            "          <!-- User Information -->",
+            "          <user v='Anonymous' />",
+            "[concat('          <team v=''', parameters('fah_team'), ''' />')]",
+            "          ",
+            "          <!-- Folding Slots -->",
+            "          <slot id='0' type='CPU' />",
+            "          <slot id='1' type='GPU' />",
+            "          ",
+            "        </config>",
+            "",
+            "power_state:",
+            "  mode: reboot",
+            "  condition: True",
+            "  message: Restarting to complete setup of F@H and Cuda"
         ],
         "cloudinit": "[utils.join(variables('cloudinit-lines'))]",
         "nsgName": "[concat(parameters('name'), '_nsg')]",
@@ -93,8 +103,7 @@
         "vnetName": "[concat(parameters('name'), '-vnet')]",
         "subnetName": "default",
         "vnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', variables('vnetName'))]",
-        "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
-        "nvidiaExtensionName": "[concat('micorosft.nvidia-gpu-driver-linux.', parameters('name'))]"
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]"
     },
     "functions": [
         {
@@ -109,7 +118,7 @@
                     ],
                     "output": {
                         "type": "string",
-                        "value": "[replace(replace(replace(string(parameters('lines')), '[\"', ''), '\"]', ''), '\",\"', '')]"
+                        "value": "[replace(replace(replace(string(parameters('lines')), '[\"', ''), '\"]', ''), '\",\"', '\n')]"
                     }
                 }
             }
@@ -277,33 +286,11 @@
                     "customData": "[base64(variables('cloudinit'))]"
                 }
             }
-        },
-        {
-            "name": "[variables('nvidiaExtensionName')]",
-            "apiVersion": "2015-01-01",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "incremental",
-                "templateLink": {
-                    "uri": "https://gallery.azure.com/artifact/20161101/microsoft.nvidia-gpu-driver-linux-arm.1.2.0/Artifacts/MainTemplate.json"
-                },
-                "parameters": {
-                    "vmName": {
-                        "value": "[parameters('name')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('name'))]"
-            ]
         }
     ],
     "outputs": {
         "foldingAtHomeTeam": {
-            "type": "string",
+            "type": "int",
             "value": "[parameters('fah_team')]"
         },
         "adminUsername": {
