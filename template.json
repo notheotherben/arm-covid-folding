@@ -39,7 +39,7 @@
         },
         "fah_team": {
             "type": "int",
-            "defaultValue": 240772,
+            "defaultValue": 240722,
             "minValue": 0,
             "metadata": {
                 "description": "The ID of the Folding@Home team you wish to contribute towards."

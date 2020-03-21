@@ -28,7 +28,7 @@ This is the location in which the virtual machine will be deployed. Some locatio
 ##### Sku (`default: Standard_NC6_Promo`)
 The type of virtual machine which will be provisioned. The `Standard_NC6_Promo` SKU includes an NVIDIA Tesla K80 accelerator card which will greatly speed up your contributions to the F@H project. Other options may have more modern, or a greater number, of accelerator cards. You can find out more [here](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-gpu).
 
-##### Fah_team (`default: 240772`)
+##### Fah_team (`default: 240722`)
 The Folding@Home team you wish to contribute towards. By default this is the Azure SRE team (since we're using this template on our personal subscriptions to help out) but feel free to change this to your own if you prefer.
 
 ##### Ssh_key
