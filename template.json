@@ -60,7 +60,7 @@
             "",
             "runcmd:",
             "  - [ add-apt-repository, 'ppa:graphics-drivers/ppa' ]",
-            "  - [ apt, install, -y, nvidia-driver-440 ]",
+            "  - [ apt, install, -y, nvidia-headless-440, ocl-icd-opencl-dev ]",
             "  - [ wget, 'https://download.foldingathome.org/releases/public/release/fahclient/debian-stable-64bit/v7.5/fahclient_7.5.1_amd64.deb' , -O, '/tmp/fahclient.deb' ]",
             "  - [ dpkg, -i, --force-depends, /tmp/fahclient.deb ]",
             "  - [ mkdir, -p, '/var/lib/fahclient' ]",
